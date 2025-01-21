@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.yaml.snakeyaml.events.Event;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,18 +50,16 @@ public class VehicleService {
     public Optional<VehicleBooking> getVehicleBookingById(Long id) {
         return vehicleBookingRepository.findById(id);
     }
-    //image adding
+
+
     public VehicleBooking addImageToVehicleBooking(VehicleBooking vehicleBooking, MultipartFile image) {
         try {
-            vehicleBooking.setImages(image.getBytes());
+            vehicleBooking.setImages(Collections.singletonList(image.getBytes()));
 
             return vehicleBookingRepository.save(vehicleBooking);
         } catch (IOException e) {
             throw new RuntimeException("Failed to process the image file", e);
         }
-    }
-    public List<VehicleBooking> findAll() {
-        return vehicleBookingRepository.findAll();
     }
 
 }

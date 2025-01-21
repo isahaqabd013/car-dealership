@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class VehicleBooking {
@@ -56,12 +58,15 @@ public class VehicleBooking {
     private LocalDateTime createdAt;
 
     @Lob
-    private byte[] images;
+    @ElementCollection(fetch = FetchType.LAZY)
+    private List<byte[]> images = new ArrayList<>();
 
+//    ============================================================================
 
+    public VehicleBooking() {
+    }
 
-
-    public VehicleBooking(Long id,String insurance, Boolean sparekey,String registrationNumber, String ownerName, String carMake, String carModel, String variant, int manufactureYear, Long kms, String bodyType, int numberOfOwners, String fuelType, String transmissionType, String vin, Long expectedPrice, String description, byte[] images, LocalDateTime createdAt) {
+    public VehicleBooking(Long id, String registrationNumber, String ownerName, String carMake, String carModel, String variant, int manufactureYear, Long kms, String bodyType, int numberOfOwners, String fuelType, String transmissionType, String vin, Long expectedPrice, String description, Boolean sparekey, String insurance, LocalDateTime createdAt, List<byte[]> images) {
         this.id = id;
         this.registrationNumber = registrationNumber;
         this.ownerName = ownerName;
@@ -77,17 +82,10 @@ public class VehicleBooking {
         this.vin = vin;
         this.expectedPrice = expectedPrice;
         this.description = description;
-        this.images = images;
+        this.sparekey = sparekey;
+        this.insurance = insurance;
         this.createdAt = createdAt;
-        this.insurance=insurance;
-        this.sparekey=sparekey;
-    }
-
-    public VehicleBooking(Long expectedPrice) {
-        this.expectedPrice = expectedPrice;
-    }
-
-    public VehicleBooking() {
+        this.images = images;
     }
 
     public Long getId() {
@@ -194,6 +192,14 @@ public class VehicleBooking {
         this.vin = vin;
     }
 
+    public Long getExpectedPrice() {
+        return expectedPrice;
+    }
+
+    public void setExpectedPrice(Long expectedPrice) {
+        this.expectedPrice = expectedPrice;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -202,12 +208,20 @@ public class VehicleBooking {
         this.description = description;
     }
 
-    public byte[] getImages() {
-        return images;
+    public Boolean getSparekey() {
+        return sparekey;
     }
 
-    public void setImages(byte[] images) {
-        this.images = images;
+    public void setSparekey(Boolean sparekey) {
+        this.sparekey = sparekey;
+    }
+
+    public String getInsurance() {
+        return insurance;
+    }
+
+    public void setInsurance(String insurance) {
+        this.insurance = insurance;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -218,28 +232,11 @@ public class VehicleBooking {
         this.createdAt = createdAt;
     }
 
-    public Long getExpectedPrice() {
-        return expectedPrice;
+    public List<byte[]> getImages() {
+        return images;
     }
 
-    public void setExpectedPrice(Long expectedPrice) {
-        this.expectedPrice = expectedPrice;
-    }
-
-
-    public String getInsurance() {
-        return insurance;
-    }
-
-    public void setInsurance(String insurance) {
-        this.insurance = insurance;
-    }
-
-    public Boolean getSparekey() {
-        return sparekey;
-    }
-
-    public void setSparekey(Boolean sparekey) {
-        this.sparekey = sparekey;
+    public void setImages(List<byte[]> images) {
+        this.images = images;
     }
 }

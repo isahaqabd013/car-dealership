@@ -29,55 +29,6 @@ public class VehicleController {
         return vehicle.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
-//
-    @PostMapping("/booking")
-    public ResponseEntity<?> saveVehicleBooking(@RequestBody VehicleBooking vehicleBooking) {
-        try {
-            VehicleBooking savedBooking = vehicleService.saveVehicle(vehicleBooking);
-            System.out.println(savedBooking.toString());
-            return ResponseEntity.ok(savedBooking);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
-        }
-    }
-//    //image adding in the sql
-@PostMapping("/booking/image")
-public ResponseEntity<?> addImage(
-        @RequestParam("vehicleId") Long vehicleId,
-        @RequestParam("image") MultipartFile image) {
-    try {
-        Optional<VehicleBooking> optionalBooking = vehicleService.getVehicleBookingById(vehicleId);
-        if (optionalBooking.isPresent()) {
-            VehicleBooking updatedBooking = vehicleService.addImageToVehicleBooking(optionalBooking.get(), image);
-            return ResponseEntity.ok(updatedBooking);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vehicle booking not found");
-        }
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Error processing the image: " + e.getMessage());
-    }
-}
-
-    @GetMapping("/booking/image/{id}")
-    public ResponseEntity<byte[]> getImageById(@PathVariable Long id) {
-        try {
-            VehicleBooking vehicle = vehicleService.getVehicleBookingById(id)
-                    .orElseThrow(() -> new RuntimeException("VehicleBooking not found for ID: " + id));
-
-            byte[] imageFile = vehicle.getImages();
-
-            if (imageFile == null || imageFile.length == 0) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-
-            return ResponseEntity.ok()
-                    .contentType(MediaType.IMAGE_JPEG) // Assuming the image is in JPEG format
-                    .body(imageFile);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-    }
 
     @PutMapping("/booking/{id}/price")
     public ResponseEntity<VehicleBooking> updateExpectedPrice(
@@ -93,6 +44,92 @@ public ResponseEntity<?> addImage(
             return ResponseEntity.notFound().build();
         }
     }
+    @PostMapping("/booking")
+    public ResponseEntity<?> saveVehicleBooking(@RequestBody VehicleBooking vehicleBooking) {
+        try {
+            VehicleBooking savedBooking = vehicleService.saveVehicle(vehicleBooking);
+            System.out.println(savedBooking.toString());
+            return ResponseEntity.ok(savedBooking);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+    }
+//    @PostMapping("/booking/images")
+//    public ResponseEntity<?> addImages(
+//            @RequestParam("vehicleId") Long vehicleId,
+//            @RequestParam("images") List<MultipartFile> images) {
+//        try {
+//            Optional<VehicleBooking> optionalBooking = vehicleService.getVehicleBookingById(vehicleId);
+//            if (optionalBooking.isPresent()) {
+//                VehicleBooking updatedBooking = vehicleService.addImagesToVehicleBooking(optionalBooking.get(), images);
+//                return ResponseEntity.ok(updatedBooking);
+//            } else {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vehicle booking not found");
+//            }
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body("Error processing the images: " + e.getMessage());
+//        }
+//    }
+    @PostMapping("/booking/image")
+    public ResponseEntity<?> addImage(
+            @RequestParam("vehicleId") Long vehicleId,
+            @RequestParam("image") MultipartFile image) {
+        try {
+            Optional<VehicleBooking> optionalBooking = vehicleService.getVehicleBookingById(vehicleId);
+            if (optionalBooking.isPresent()) {
+                VehicleBooking updatedBooking = vehicleService.addImageToVehicleBooking(optionalBooking.get(), image);
+                return ResponseEntity.ok(updatedBooking);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Vehicle booking not found");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error processing the image: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/booking/image/{id}")
+    public ResponseEntity<byte[]> getImageById(@PathVariable Long id) {
+        try {
+            VehicleBooking vehicle = vehicleService.getVehicleBookingById(id)
+                    .orElseThrow(() -> new RuntimeException("VehicleBooking not found for ID: " + id));
+
+            byte[] imageFile = vehicle.getImages().get(0); // Retrieve the first image (modify as needed)
+
+            if (imageFile == null || imageFile.length == 0) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_JPEG) // Assuming the image is in JPEG format
+                    .body(imageFile);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+//
+//    @GetMapping("/booking/image/{id}")
+//    public ResponseEntity<byte[]> getImageById(@PathVariable Long id) {
+//        try {
+//            VehicleBooking vehicle = vehicleService.getVehicleBookingById(id)
+//                    .orElseThrow(() -> new RuntimeException("VehicleBooking not found for ID: " + id));
+//
+//            byte[] imageFile = vehicle.getImages();
+//
+//            if (imageFile == null || imageFile.length == 0) {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//            }
+//
+//            return ResponseEntity.ok()
+//                    .contentType(MediaType.IMAGE_JPEG) // Assuming the image is in JPEG format
+//                    .body(imageFile);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//        }
+//    }
+
 
 
 }
